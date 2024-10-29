@@ -9,3 +9,7 @@ export type TContext = FastifyInstance<
   FastifyBaseLogger,
   TypeBoxTypeProvider
 >;
+
+export type TArgs = {
+  id: string;
+};

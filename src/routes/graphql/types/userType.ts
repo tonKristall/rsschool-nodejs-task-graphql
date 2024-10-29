@@ -9,6 +9,7 @@ import { UUIDType } from './uuid.js';
 import { ProfileType } from './profileType.js';
 import { PostType } from './postType.js';
 import { TContext } from './common.js';
+import { GraphQLInputObjectType } from 'graphql/type/index.js';
 
 interface ISource {
   id: string;
@@ -62,5 +63,21 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType<ISource, TConte
         });
       },
     },
+  }),
+});
+
+export const CreateUserInput = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
+  fields: () => ({
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    balance: { type: new GraphQLNonNull(GraphQLFloat) },
+  }),
+});
+
+export const ChangeUserInput = new GraphQLInputObjectType({
+  name: 'ChangeUserInput',
+  fields: () => ({
+    name: { type: GraphQLString },
+    balance: { type: GraphQLFloat },
   }),
 });

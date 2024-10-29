@@ -4,11 +4,7 @@ import { UserType } from './userType.js';
 import { PostType } from './postType.js';
 import { ProfileType } from './profileType.js';
 import { UUIDType } from './uuid.js';
-import { TContext } from './common.js';
-
-type TArgs = {
-  id: string;
-};
+import { TArgs, TContext } from './common.js';
 
 export const RootQueryType = new GraphQLObjectType<unknown, TContext>({
   name: 'RootQueryType',
