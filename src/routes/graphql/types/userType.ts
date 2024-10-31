@@ -8,7 +8,7 @@ import {
 import { UUIDType } from './uuid.js';
 import { ProfileType } from './profileType.js';
 import { PostType } from './postType.js';
-import { TContext } from './common.js';
+import { IContext } from './common.js';
 import { GraphQLInputObjectType } from 'graphql/type/index.js';
 
 interface ISource {
@@ -17,7 +17,7 @@ interface ISource {
   balance: number;
 }
 
-export const UserType: GraphQLObjectType = new GraphQLObjectType<ISource, TContext>({
+export const UserType: GraphQLObjectType = new GraphQLObjectType<ISource, IContext>({
   name: 'UserType',
   fields: () => ({
     id: { type: new GraphQLNonNull(UUIDType) },
@@ -25,42 +25,26 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType<ISource, TConte
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
     profile: {
       type: ProfileType,
-      resolve({ id }, _args, { prisma }) {
-        return prisma.profile.findUnique({ where: { userId: id } });
+      resolve({ id }, _args, { dataLoaders }) {
+        return dataLoaders.profileLoader.load(id);
       },
     },
     posts: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(PostType))),
-      resolve({ id }, _args, { prisma }) {
-        return prisma.post.findMany({ where: { authorId: id } });
+      resolve({ id }, _args, { dataLoaders }) {
+        return dataLoaders.postsLoader.load(id);
       },
     },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
-      resolve({ id }, _args, { prisma }) {
-        return prisma.user.findMany({
-          where: {
-            subscribedToUser: {
-              some: {
-                subscriberId: id,
-              },
-            },
-          },
-        });
+      resolve({ id }, _args, { dataLoaders }) {
+        return dataLoaders.userSubscribedToLoader.load(id);
       },
     },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
-      resolve({ id }, _args, { prisma }) {
-        return prisma.user.findMany({
-          where: {
-            userSubscribedTo: {
-              some: {
-                authorId: id,
-              },
-            },
-          },
-        });
+      resolve({ id }, _args, { dataLoaders }) {
+        return dataLoaders.subscribedToUserLoader.load(id);
       },
     },
   }),

@@ -1,15 +1,11 @@
-import { FastifyBaseLogger, FastifyInstance, RawServerDefault } from 'fastify';
-import { IncomingMessage, ServerResponse } from 'node:http';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import { dataLoaders } from '../dataLoader.js';
+import { PrismaClient } from '@prisma/client';
 
-export type TContext = FastifyInstance<
-  RawServerDefault,
-  IncomingMessage,
-  ServerResponse,
-  FastifyBaseLogger,
-  TypeBoxTypeProvider
->;
+export interface IContext {
+  prisma: PrismaClient;
+  dataLoaders: ReturnType<typeof dataLoaders>;
+}
 
-export type TArgs = {
+export interface IArgs {
   id: string;
-};
+}

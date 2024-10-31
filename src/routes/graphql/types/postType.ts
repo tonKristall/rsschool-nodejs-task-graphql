@@ -1,7 +1,6 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { GraphQLInputObjectType } from 'graphql/type/index.js';
-import { GraphQLFloat } from 'graphql/index.js';
 
 export const PostType: GraphQLObjectType = new GraphQLObjectType({
   name: 'PostType',

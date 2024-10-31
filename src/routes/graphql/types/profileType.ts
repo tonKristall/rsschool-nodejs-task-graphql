@@ -1,9 +1,8 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLBoolean, GraphQLInt } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { MemberType, MemberTypeId } from './memberType.js';
-import { TContext } from './common.js';
+import { IContext } from './common.js';
 import { GraphQLInputObjectType } from 'graphql/type/index.js';
-import { GraphQLString } from 'graphql/index.js';
 
 interface ISource {
   id: string;
@@ -13,7 +12,7 @@ interface ISource {
   memberTypeId: string;
 }
 
-export const ProfileType: GraphQLObjectType = new GraphQLObjectType<ISource, TContext>({
+export const ProfileType: GraphQLObjectType = new GraphQLObjectType<ISource, IContext>({
   name: 'ProfileType',
   fields: () => ({
     id: { type: new GraphQLNonNull(UUIDType) },
@@ -21,8 +20,8 @@ export const ProfileType: GraphQLObjectType = new GraphQLObjectType<ISource, TCo
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
     memberType: {
       type: new GraphQLNonNull(MemberType),
-      resolve({ memberTypeId }, _args, { prisma }) {
-        return prisma.memberType.findUnique({ where: { id: memberTypeId } });
+      async resolve({ memberTypeId }, _args, { dataLoaders }) {
+        return await dataLoaders.memberTypeLoader.load(memberTypeId);
       },
     },
   }),

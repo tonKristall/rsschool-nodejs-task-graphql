@@ -3,10 +3,10 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { ChangeUserInput, CreateUserInput, UserType } from './userType.js';
 import { ChangePostInput, CreatePostInput, PostType } from './postType.js';
 import { ChangeProfileInput, CreateProfileInput, ProfileType } from './profileType.js';
-import { TArgs, TContext } from './common.js';
+import { IArgs, IContext } from './common.js';
 import { UUIDType } from './uuid.js';
 
-export const Mutations = new GraphQLObjectType<unknown, TContext>({
+export const Mutations = new GraphQLObjectType<unknown, IContext>({
   name: 'Mutations',
   fields: {
     createUser: {
@@ -71,7 +71,7 @@ export const Mutations = new GraphQLObjectType<unknown, TContext>({
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
-      async resolve(_source, { id }: TArgs, { prisma }) {
+      async resolve(_source, { id }: IArgs, { prisma }) {
         await prisma.user.delete({ where: { id } });
         return 'Resolve';
       },
@@ -81,7 +81,7 @@ export const Mutations = new GraphQLObjectType<unknown, TContext>({
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
-      async resolve(_source, { id }: TArgs, { prisma }) {
+      async resolve(_source, { id }: IArgs, { prisma }) {
         await prisma.post.delete({ where: { id } });
         return 'Resolve';
       },
@@ -91,7 +91,7 @@ export const Mutations = new GraphQLObjectType<unknown, TContext>({
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
-      async resolve(_source, { id }: TArgs, { prisma }) {
+      async resolve(_source, { id }: IArgs, { prisma }) {
         await prisma.profile.delete({ where: { id } });
         return 'Resolve';
       },
